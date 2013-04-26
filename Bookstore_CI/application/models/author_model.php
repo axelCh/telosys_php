@@ -1,55 +1,54 @@
 <?php
-
-class Author_model extends CI_Model
-{
-	/* ENTITY PRIMARY KEY */
-	private $id;
-
-	/* ENTITY FIELDS */
-	private $lastName;
-	private $firstName;
+class Author_model extends CI_Model {
+	
+	/* TABLE NAME */
+	private $tbl_author = 'author';
 
 	/* CONSTRUCTOR */
-	public function __construct()
-	{
+	function __construct(){
 		parent::__construct();
-		settype($id, 'int');
-		settype($lastName, 'string');
-		settype($firstName, 'string');
 	}
-
-	/* GETTER & SETTER FOR FIELDS AND THE KEY FIELD */
-	public function __set($name, $value)
-	{
-		$this->$name = $value;
+ 
+	/* LIST ALL AUTHORS IN DATABASE */
+	function list_all(){
+		$this->db->order_by('id','asc');
+		return $this->db->get($this->tbl_author);
 	}
-	public function __get($name)
-	{
-		return $this->$name;
+	
+	/* GET THE NUMBER OF AUTHORS IN DATABASE */	
+	function count_all(){
+		return $this->db->count_all($this->tbl_author);
 	}
-	public function insert()
-	{
-		$data = array(
-				'last_name' => $this->lastName,
-				'first_name' => $this->firstName
-		);
-		
-		$this->db->insert('author', $data);
+	
+	/* GET AUTHORS WITH PAGING */	
+	function get_paged_list($limit = 10, $offset = 0){
+		$this->db->order_by('id','asc');
+		return $this->db->get($this->tbl_author, $limit, $offset);
 	}
-	public function update()
-	{
-		$data = array(
-               'last_name' => $this->lastName,
-               'first_name' => $this->firstName
-            );
-
-		$this->db->where('id', $this->$id);
-		$this->db->update('author', $data);
+	
+	/* GET AUTHORS BY ID */	
+	function get_by_id($id){
+		$this->db->where('id', $id);
+		return $this->db->get($this->tbl_author);
 	}
-	public function __toString()
-	{
-		$format = '%c | %s | %s';
-		return sprintf($format, $this->id, $this->lastName, $this->firstName);
+	
+	/* ADD NEW AUTHOR */	
+	function save($author){
+		$this->db->insert($this->tbl_author, $author);
+		return $this->db->insert_id();
 	}
+	
+	/* UPDATE AUTHOR BY ID */	
+	function update($id, $author){
+		$this->db->where('id', $id);
+		$this->db->update($this->tbl_author, $author);
+	}
+	
+	/* DELETE AUTHOR BY ID */	
+	function delete($id){
+		$this->db->where('id', $id);
+		$this->db->delete($this->tbl_author);	
+	}
+	
 }
 ?>
