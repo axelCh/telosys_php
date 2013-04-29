@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset="utf-8">
 	<title>AUTHOR DETAILS PAGE</title>
-	<link href="<?php echo base_url(); ?>res/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="<?php echo base_url(); ?>application/css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="container">
