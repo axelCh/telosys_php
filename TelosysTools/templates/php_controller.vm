@@ -1,0 +1,229 @@
+${LT}#[[?]]#php
+
+#[[if]]# ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class ${beanClass.name} extends CI_Controller ${LBRACE}
+
+	#[[/*]]# NUMBER OF RECORDS PER PAGE #[[*/]]#
+	private ${DOLLAR}limit = 10;
+
+	function __construct() ${LBRACE}
+		parent::__construct();
+	
+		${DOLLAR}this->load->library(array('table','form_validation'));
+		${DOLLAR}this->load->helper('url');
+		${DOLLAR}this->load->model('${beanClass.name}_model','',TRUE);
+	${RBRACE}
+		
+	function index(${DOLLAR}offset = 0) ${LBRACE}
+	
+		#[[/*]]# OFFSET #[[*/]]#
+		${DOLLAR}uri_segment = 3;
+		${DOLLAR}offset = ${DOLLAR}this->uri->segment(${DOLLAR}uri_segment);
+		
+		#[[/*]]# LOAD DATA #[[*/]]#
+		${DOLLAR}${beanClass.sqlTable}s = ${DOLLAR}this->${beanClass.name}_model->get_paged_list(${DOLLAR}this->limit, ${DOLLAR}offset)->result();
+		
+		#[[/*]]# GENERATE PAGINATION #[[*/]]#
+		${DOLLAR}this->load->library('pagination');
+		${DOLLAR}config['base_url'] = site_url('${beanClass.sqlTable}/index/');
+		${DOLLAR}config['total_rows'] = ${DOLLAR}this->${beanClass.name}_model->count_all();
+		${DOLLAR}config['per_page'] = ${DOLLAR}this->limit;
+		${DOLLAR}config['uri_segment'] = ${DOLLAR}uri_segment;
+		${DOLLAR}this->pagination->initialize(${DOLLAR}config);
+		${DOLLAR}data['pagination'] = ${DOLLAR}this->pagination->create_links();
+		
+		#[[/*]]# GENERATE TABLE DATA #[[*/]]#
+		${DOLLAR}this->load->library('table');
+		${DOLLAR}this->table->set_empty("${AMP}nbsp;");
+#set($string = "${DOLLAR}this->table->set_heading(")
+#foreach ($field in $beanClass.attributes)
+#set($string = $string.concat("'$field.databaseName.replace('_',' ').toUpperCase()', "))
+#end
+		#set($string = $string.concat("'Actions');"))
+		$string
+		${DOLLAR}i = 0 + ${DOLLAR}offset;
+		#[[foreach]]# (${DOLLAR}${beanClass.sqlTable}s #[[as]]# ${DOLLAR}${beanClass.sqlTable}) ${LBRACE}
+			${DOLLAR}this->table->add_row(#[[++]]#${DOLLAR}i,
+			#foreach ($field in $beanClass.attributes)
+#if ( $field.name != $beanClass.KeyAttributes[0].name )
+${DOLLAR}${beanClass.sqlTable}->$field.databaseName,
+#end
+#end			 
+				anchor('${beanClass.sqlTable}/view/'.${DOLLAR}${beanClass.sqlTable}->${beanClass.KeyAttributes[0].name},'view',array('class'=>'view')).' '.
+				anchor('${beanClass.sqlTable}/update/'.${DOLLAR}${beanClass.sqlTable}->${beanClass.KeyAttributes[0].name},'update',array('class'=>'update')).' '.
+				anchor('${beanClass.sqlTable}/delete/'.${DOLLAR}${beanClass.sqlTable}->${beanClass.KeyAttributes[0].name},'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this ${beanClass.name} ?')"))
+			);
+		${RBRACE}
+		${DOLLAR}data['table'] = ${DOLLAR}this->table->generate();
+		
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}List', ${DOLLAR}data);
+	${RBRACE}
+	
+	function add() ${LBRACE}
+	
+		#[[/*]]# SET EMPTY DEFAULT FROM FIELD VALUES #[[*/]]#
+		${DOLLAR}this->_set_fields();
+		
+		#[[/*]]# SET VALIDATION PROPERTIES #[[*/]]#
+		${DOLLAR}this->_set_rules();
+	
+		#[[/*]]# SET COMMON PROPERTIES #[[*/]]#
+		${DOLLAR}data['title'] = 'Add new ${beanClass.name}';
+		${DOLLAR}data['message'] = '';
+		${DOLLAR}data['action'] = site_url('${beanClass.sqlTable}/add${beanClass.name}');
+		${DOLLAR}data['link_back'] = anchor('${beanClass.sqlTable}/index/','Back to list of ${beanClass.name}s',array('class'=>'back'));
+	
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}Edit', ${DOLLAR}data);
+	${RBRACE}
+	
+	function add${beanClass.name}() ${LBRACE}
+	
+		#[[/*]]# SET COMMON PROPERTIES #[[*/]]#
+		${DOLLAR}data['title'] = 'Add new ${beanClass.name}';
+		${DOLLAR}data['action'] = site_url('${beanClass.sqlTable}/add${beanClass.name}');
+		${DOLLAR}data['link_back'] = anchor('${beanClass.sqlTable}/index/','Back to list of ${beanClass.name}s',array('class'=>'back'));
+	
+		#[[/*]]# SET EMPTY DEFAULT FROM FIELD VALUES #[[*/]]#
+		${DOLLAR}this->_set_fields();
+		
+		#[[/*]]# SET VALIDATION PROPERTIES #[[*/]]#
+		${DOLLAR}this->_set_rules();
+	
+		#[[/*]]# RUN VALIDATION #[[*/]]#
+		#[[if]]# (${DOLLAR}this->form_validation->run() == FALSE) ${LBRACE}
+			${DOLLAR}data['message'] = '';
+		${RBRACE}
+		#[[else]]# ${LBRACE}
+		
+			#[[/*]]# SAVE DATA #[[*/]]#
+			${DOLLAR}${beanClass.sqlTable} = array(
+			#foreach ($field in $beanClass.attributes)
+#if ( $field.name != $beanClass.KeyAttributes[0].name )
+'$field.databaseName' => ${DOLLAR}this->input->post('$field.databaseName'),
+#end	
+#end	
+			);
+			${DOLLAR}${beanClass.KeyAttributes[0].name} = ${DOLLAR}this->${beanClass.name}_model->save(${DOLLAR}${beanClass.sqlTable});
+				
+			#[[/*]]# SET USER MESSAGE #[[*/]]#
+			${DOLLAR}data['message'] = '#[[<div class="success">]]#add new ${beanClass.name} success#[[</div>]]#';
+		${RBRACE}
+	
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}Edit', ${DOLLAR}data);
+	${RBRACE}
+	
+	function view(${DOLLAR}${beanClass.KeyAttributes[0].name}) ${LBRACE}
+	
+		#[[/*]]# SET COMMON PROPERTIES #[[*/]]#
+		${DOLLAR}data['title'] = '${beanClass.name} Details';
+		${DOLLAR}data['link_back'] = anchor('${beanClass.sqlTable}/index/','Back to list of ${beanClass.name}s',array('class'=>'back'));
+	
+		#[[/*]]# GET ${beanClass.name} DETAILS #[[*/]]#
+		${DOLLAR}data['${beanClass.sqlTable}'] = ${DOLLAR}this->${beanClass.name}_model->get_by_${beanClass.KeyAttributes[0].name}(${DOLLAR}${beanClass.KeyAttributes[0].name})->row();
+	
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}View', ${DOLLAR}data);
+	${RBRACE}
+	
+	function update(${DOLLAR}${beanClass.KeyAttributes[0].name}) ${LBRACE}
+	
+		#[[/*]]# SET VALIDATION PROPERTIES #[[*/]]#
+		${DOLLAR}this->_set_rules();
+	
+		#[[/*]]# PREFILL FORM VALUES #[[*/]]#
+		${DOLLAR}${beanClass.sqlTable} = ${DOLLAR}this->${beanClass.name}_model->get_by_${beanClass.KeyAttributes[0].databaseName}(${DOLLAR}${beanClass.KeyAttributes[0].name})->row();
+		${DOLLAR}this->form_data->${beanClass.KeyAttributes[0].databaseName} = ${DOLLAR}${beanClass.KeyAttributes[0].databaseName};
+		#foreach ($field in $beanClass.attributes)
+#if ( $field.name != $beanClass.KeyAttributes[0].name )
+${DOLLAR}this->form_data->$field.databaseName = ${DOLLAR}${beanClass.sqlTable}->$field.databaseName; 
+#end
+#end
+		
+		#[[/*]]# SET COMMON PROPERTIES #[[*/]]#
+		${DOLLAR}data['title'] = 'Update ${beanClass.name}';
+		${DOLLAR}data['message'] = '';
+		${DOLLAR}data['action'] = site_url('${beanClass.sqlTable}/update${beanClass.name}');
+		${DOLLAR}data['link_back'] = anchor('${beanClass.sqlTable}/index/','Back to list of ${beanClass.name}s',array('class'=>'back'));
+	
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}Edit', ${DOLLAR}data);
+	${RBRACE}
+	
+	function update${beanClass.name}() ${LBRACE}
+	
+		#[[/*]]# SET COMMON PROPERTIES #[[*/]]#
+		${DOLLAR}data['title'] = 'Update ${beanClass.name}';
+		${DOLLAR}data['action'] = site_url('${beanClass.sqlTable}/update${beanClass.name}');
+		${DOLLAR}data['link_back'] = anchor('${beanClass.sqlTable}/index/','Back to list of ${beanClass.name}s',array('class'=>'back'));
+	
+		#[[/*]]# SET EMPTY DEFAULT FROM FIELD VALUES #[[*/]]#
+		${DOLLAR}this->_set_fields();
+		
+		#[[/*]]# SET VALIDATION PROPERTIES #[[*/]]#
+		${DOLLAR}this->_set_rules();
+	
+		#[[/*]]# RUN VALIDATION #[[*/]]#
+		#[[if]]# (${DOLLAR}this->form_validation->run() == FALSE) ${LBRACE}
+			${DOLLAR}data['message'] = '';
+		${RBRACE}
+		#[[else]]# ${LBRACE}
+		
+			#[[/*]]# SAVE DATA #[[*/]]#
+			${DOLLAR}${beanClass.KeyAttributes[0].name} = ${DOLLAR}this->input->post('${beanClass.KeyAttributes[0].databaseName}');
+			${DOLLAR}${beanClass.sqlTable} = array(
+				#set($i = $beanClass.attributes.size() - 1)
+#foreach ($field in $beanClass.attributes)
+#if ( $field.name != $beanClass.KeyAttributes[0].name )
+#if ( $field.name != $beanClass.attributes[$i].name )
+'$field.databaseName' => ${DOLLAR}this->input->post('$field.databaseName'),
+#else
+'$field.databaseName' => ${DOLLAR}this->input->post('$field.databaseName')
+#end
+#end
+#end
+			);
+			${DOLLAR}this->${beanClass.name}_model->update(${DOLLAR}${beanClass.KeyAttributes[0].name}, ${DOLLAR}${beanClass.sqlTable});
+				
+			#[[/*]]# SET USER MESSAGE #[[*/]]#
+			${DOLLAR}data['message'] = '#[[<div class="success">]]#update ${beanClass.name} success#[[</div>]]#';
+		${RBRACE}
+	
+		#[[/*]]# LOAD VIEW #[[*/]]#
+		${DOLLAR}this->load->view('${beanClass.sqlTable}Edit', ${DOLLAR}data);
+	${RBRACE}
+	
+	function delete(${DOLLAR}${beanClass.KeyAttributes[0].name}) ${LBRACE}
+	
+		#[[/*]]# DELETE ${beanClass.name} #[[*/]]#
+		${DOLLAR}this->${beanClass.name}_model->delete(${DOLLAR}${beanClass.KeyAttributes[0].name});
+	
+		#[[/*]]# REDIRECT TO ${beanClass.name} LIST PAGE #[[*/]]#
+		redirect('${beanClass.sqlTable}/index/','refresh');
+	${RBRACE}
+	
+	#[[/*]]# SET EMPTY DEFAULT FROM FIELD VALUES #[[*/]]#
+	function _set_fields() ${LBRACE}
+	#foreach ($field in $beanClass.attributes)
+	${DOLLAR}this->form_data->$field.databaseName = '';
+	#end
+	${RBRACE}
+	
+	#[[/*]]# VALIDATION RULES #[[*/]]#
+	function _set_rules() ${LBRACE}
+		#foreach ($field in $beanClass.attributes)
+#if ( $field.name != $beanClass.KeyAttributes[0].name )
+${DOLLAR}this->form_validation->set_rules('$field.databaseName', '$field.databaseName.replace('_',' ').toUpperCase()', 'trim|required');
+#end
+#end
+	
+		${DOLLAR}this->form_validation->set_message('required', '* required');
+		${DOLLAR}this->form_validation->set_message('isset', '* required');
+		${DOLLAR}this->form_validation->set_error_delimiters('#[[<p class="error">]]#', '#[[</p>]]#');
+	${RBRACE}
+	
+${RBRACE}
+#[[?]]#${GT}

@@ -1,0 +1,55 @@
+#[[<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset="utf-8">
+	<title>]]#${beanClass.name}#[[ EDITION PAGE</title>
+	<link href="<?php echo base_url(); ?>application/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="container">
+	<h1 id="CI-h1">Bookstore</h1>
+	<div id="body">
+	<div class="content">
+		<h1><?php echo $title; ?></h1>
+		<?php echo $message; ?>
+		<form method="post" action="<?php echo $action; ?>">
+		<div class="data">
+		<table>]]#
+#foreach ($field in $beanClass.keyAttributes)
+#if ($field.isAutoIncremented())		
+			<tr>
+				<td width="30%">$field.databaseName.replace('_',' ').toUpperCase()</td>
+				<td><input type="text" name="$field.databaseName" disabled="disable" class="text" value="<?php echo set_value('$field.databaseName'); ?>"/></td>
+				<input type="hidden" name="$field.databaseName" value="<?php echo set_value('$field.databaseName', ${DOLLAR}this->form_data->$field.databaseName); ?>"/>
+			</tr>
+#else
+			<tr>
+				<td width="30%">$field.databaseName.replace('_',' ').toUpperCase()</td>
+				<td><input type="text" name="$field.databaseName" disabled="disable" class="text" value="<?php echo set_value('$field.databaseName'); ?>"/></td>
+				<input type="text" name="$field.databaseName" value="<?php echo set_value('$field.databaseName', ${DOLLAR}this->form_data->$field.databaseName); ?>"/>
+			</tr>
+#end		
+#end
+#foreach ($field in $beanClass.nonKeyAttributes)
+			<tr>
+				<td valign="top">$field.databaseName.replace('_',' ').toUpperCase()<span style="color:red;">*</span></td>
+				<td><input type="text" name="$field.databaseName" class="text" value="<?php echo set_value('$field.databaseName', ${DOLLAR}this->form_data->$field.databaseName); ?>"/>
+					<?php echo form_error('$field.databaseName'); ?>
+				</td>
+			</tr>
+#end			
+#[[			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" value="Save"/></td>
+			</tr>
+		</table>
+		</div>
+		</form>
+		<br />
+		<?php echo $link_back; ?>
+	</div>
+	</div>
+	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
+</div>
+</body>
+</html>]]#

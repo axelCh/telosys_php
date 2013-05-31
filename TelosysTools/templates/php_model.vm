@@ -1,0 +1,55 @@
+#set( $tbl = 'tbl_' + $beanClass.sqlTable )
+${LT}#[[?]]#php
+class ${beanClass.name}_model extends CI_Model ${LBRACE}
+
+	#[[/*]]# TABLE NAME #[[*/]]#
+	private ${DOLLAR}$tbl = '${beanClass.sqlTable}';
+
+	#[[/*]]# CONSTRUCTOR #[[*/]]#
+	function __construct() ${LBRACE}
+		parent::__construct();
+	${RBRACE}
+	
+	#[[/*]]# LIST ALL ${beanClass.name}s IN DATABASE #[[*/]]#
+	function list_all() ${LBRACE}
+		${DOLLAR}this->db->order_by('${beanClass.sqlTable}','asc');
+		return ${DOLLAR}this->db->get(${DOLLAR}this->$tbl);
+	${RBRACE}
+	
+	#[[/*]]# GET THE NUMBER OF ${beanClass.name}s IN DATABASE #[[*/]]#
+	function count_all() ${LBRACE}
+		return ${DOLLAR}this->db->count_all(${DOLLAR}this->$tbl);
+	${RBRACE}
+	
+	#[[/*]]# GET ${beanClass.name}s WITH PAGING #[[*/]]#
+	function get_paged_list(${DOLLAR}limit = 10, ${DOLLAR}offset = 0) ${LBRACE}
+		${DOLLAR}this->db->order_by('${beanClass.KeyAttributes[0].databaseName}','asc');
+		return ${DOLLAR}this->db->get(${DOLLAR}this->$tbl, ${DOLLAR}limit, ${DOLLAR}offset);
+	${RBRACE}
+
+	#[[/*]]# GET ${beanClass.name}s BY ${beanClass.KeyAttributes[0].name} #[[*/]]#
+	function get_by_${beanClass.KeyAttributes[0].databaseName}(${DOLLAR}${beanClass.KeyAttributes[0].name}) ${LBRACE}
+		${DOLLAR}this->db->where('${beanClass.KeyAttributes[0].databaseName}', ${DOLLAR}${beanClass.KeyAttributes[0].name});
+		return ${DOLLAR}this->db->get(${DOLLAR}this->$tbl);
+	${RBRACE}
+	
+	#[[/*]]# ADD NEW ${beanClass.name} #[[*/]]#
+	function save(${DOLLAR}${beanClass.sqlTable}) ${LBRACE}
+		${DOLLAR}this->db->insert(${DOLLAR}this->$tbl, ${DOLLAR}${beanClass.sqlTable});
+		return ${DOLLAR}this->db->insert_${beanClass.KeyAttributes[0].databaseName}();
+	${RBRACE}
+	
+	#[[/*]]# UPDATE ${beanClass.name} BY ${beanClass.KeyAttributes[0].name} #[[*/]]#
+	function update(${DOLLAR}${beanClass.KeyAttributes[0].name}, ${DOLLAR}${beanClass.sqlTable}) ${LBRACE}
+		${DOLLAR}this->db->where('${beanClass.KeyAttributes[0].databaseName}', ${DOLLAR}${beanClass.KeyAttributes[0].name});
+		${DOLLAR}this->db->update(${DOLLAR}this->$tbl, ${DOLLAR}${beanClass.sqlTable});
+	${RBRACE}
+	
+	#[[/*]]# DELETE ${beanClass.name} BY ${beanClass.KeyAttributes[0].name} #[[*/]]#
+	function delete(${DOLLAR}${beanClass.KeyAttributes[0].name}) ${LBRACE}
+		${DOLLAR}this->db->where('${beanClass.KeyAttributes[0].databaseName}', ${DOLLAR}${beanClass.KeyAttributes[0].name});
+		${DOLLAR}this->db->delete(${DOLLAR}this->$tbl);	
+	${RBRACE}
+
+${RBRACE}
+#[[?]]#${GT}

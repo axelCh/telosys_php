@@ -1,0 +1,422 @@
+
+GENERATOR VARIABLES :
+=====================
+
+* GENERATOR 
+$generator.name    = Telosys Tools Generator
+$generator.version = 2.0.4 
+
+* CURRENT DATE AND TIME 
+$today.date = 13 mai 2013
+$today.time = 16:22:21
+$today.date("dd/MM/yyyy") = 13/05/2013
+$today.time("HH:mm")      = 16:22
+
+
+GENERATOR CONSTANTS FOR SPECIAL CHARACTERS :
+============================================
+$DOLLAR = $
+$SHARP  = #
+$AMP    = &
+$QUOT   = "
+$LT     = <
+$GT     = >
+$LBRACE = {
+$RBRACE = }
+
+GENERATOR CONSTANTS USABLE AS METHODS PARAMETERS :
+==================================================
+$const.KEY          =  1
+$const.NOT_KEY      =  2
+
+$const.TEXT         =  4
+$const.NOT_TEXT     =  8
+
+$const.IN_LINKS     =  16
+$const.NOT_IN_LINKS =  32
+
+$const.IN_SELECTED_LINKS      = 64
+$const.NOT_IN_SELECTED_LINKS  = 128
+
+$const.getKEY()     = 1
+$const.getNOT_KEY() = 2 
+
+
+PROJECT VARIABLES :
+===================
+
+* PROJECT CONFIGURATION :
+$project.packageForBean = org.demo.bean
+
+Project folders ( predefined variables ) :
+$SRC      = ""
+$RES      = ""
+$WEB      = ""
+$TEST_SRC = ""
+$TEST_RES = ""
+$DOC      = "doc"
+$TMP      = "tmp"
+
+Project variables ( $project.variables ) including predefined variables :
+ . $TMP = tmp
+ . $RES = 
+ . $TEST_RES = 
+ . $DOC = doc
+ . $SRC = 
+ . $TEST_SRC = 
+ . $WEB = 
+
+
+ENTITY VARIABLES :
+==================
+
+* BEAN CLASS
+$beanClass.name            = Book
+$beanClass.package         = org.demo.bean
+$beanClass.superClass      = 
+$beanClass.sqlTable        = book
+$beanClass.databaseCatalog = telosys_bookstore
+$beanClass.databaseSchema  = 
+
+* BEAN CLASS ATTRIBUTES ( $beanClass.attributes )
+$beanClass.attributes.size() = 11 
+$attributes.size() = 11 
+
+* BEAN CLASS JPA ANNOTATIONS ( $beanClass.jpaAnnotations )
+  @Entity
+  @Table(name="book", catalog="telosys_bookstore" )
+
+* BEAN CLASS AUTOINCREMTED PRIMARY KEY ?
+ $beanClass.autoincrementedKeyAttribute.databaseName = id
+
+KEY ATTRIBUTES : 
+ . id : type = int , auto-incremented = true
+
+ ------------------------------
+ Field : id
+ ------------------------------
+ Java :
+  $field.name      = id
+  $field.type      = int
+  $field.getter    = getId
+  $field.setter    = setId
+  $field.label     = Id
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  @Column(name="id", nullable=false)
+
+ Database :
+  $field.isKeyElement() = true
+  $field.isAutoIncremented() = true
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = id
+  $field.databaseType = INT
+  $field.jdbcTypeCode = 4
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = true
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : isbn
+ ------------------------------
+ Java :
+  $field.name      = isbn
+  $field.type      = String
+  $field.getter    = getIsbn
+  $field.setter    = setIsbn
+  $field.label     = Isbn
+  $field.inputType = text
+ Java bean validation annotations :
+  @NotNull
+  @Size( max = 13 )
+  @NotEmpty
+ Java bean validation annotations JSR303 only :
+  @NotNull
+  @Size( max = 13 )
+ JPA annotations :
+  @Column(name="ISBN", nullable=false, length=13)
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = ISBN
+  $field.databaseType = VARCHAR
+  $field.jdbcTypeCode = 12
+  $field.databaseSize = 13
+  $field.isDatabaseNotNull = true
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : title
+ ------------------------------
+ Java :
+  $field.name      = title
+  $field.type      = String
+  $field.getter    = getTitle
+  $field.setter    = setTitle
+  $field.label     = Title
+  $field.inputType = text
+ Java bean validation annotations :
+  @NotNull
+  @Size( max = 45 )
+  @NotEmpty
+ Java bean validation annotations JSR303 only :
+  @NotNull
+  @Size( max = 45 )
+ JPA annotations :
+  @Column(name="title", nullable=false, length=45)
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = title
+  $field.databaseType = VARCHAR
+  $field.jdbcTypeCode = 12
+  $field.databaseSize = 45
+  $field.isDatabaseNotNull = true
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : synopsis
+ ------------------------------
+ Java :
+  $field.name      = synopsis
+  $field.type      = String
+  $field.getter    = getSynopsis
+  $field.setter    = setSynopsis
+  $field.label     = Synopsis
+  $field.inputType = text
+ Java bean validation annotations :
+  @Size( max = 16777215 )
+ Java bean validation annotations JSR303 only :
+  @Size( max = 16777215 )
+ JPA annotations :
+  @Column(name="synopsis")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = synopsis
+  $field.databaseType = MEDIUMTEXT
+  $field.jdbcTypeCode = -1
+  $field.databaseSize = 16777215
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : authorId
+ ------------------------------
+ Java :
+  $field.name      = authorId
+  $field.type      = int
+  $field.getter    = getAuthorId
+  $field.setter    = setAuthorId
+  $field.label     = Author Id
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="author_id", nullable=false)
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = true
+  $field.databaseName = author_id
+  $field.databaseType = INT
+  $field.jdbcTypeCode = 4
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = true
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : publisherCode
+ ------------------------------
+ Java :
+  $field.name      = publisherCode
+  $field.type      = int
+  $field.getter    = getPublisherCode
+  $field.setter    = setPublisherCode
+  $field.label     = Publisher Code
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="publisher_code", nullable=false)
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = true
+  $field.databaseName = publisher_code
+  $field.databaseType = INT
+  $field.jdbcTypeCode = 4
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = true
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : cover
+ ------------------------------
+ Java :
+  $field.name      = cover
+  $field.type      = byte[]
+  $field.getter    = getCover
+  $field.setter    = setCover
+  $field.label     = Cover
+  $field.inputType = 
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Lob
+  @Column(name="cover")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = cover
+  $field.databaseType = LONGBLOB
+  $field.jdbcTypeCode = -4
+  $field.databaseSize = 2147483647
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : bestSeller
+ ------------------------------
+ Java :
+  $field.name      = bestSeller
+  $field.type      = Boolean
+  $field.getter    = getBestSeller
+  $field.setter    = setBestSeller
+  $field.label     = Best Seller
+  $field.inputType = checkbox
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="best_seller")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = best_seller
+  $field.databaseType = BIT
+  $field.jdbcTypeCode = -7
+  $field.databaseSize = 0
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : availability
+ ------------------------------
+ Java :
+  $field.name      = availability
+  $field.type      = Integer
+  $field.getter    = getAvailability
+  $field.setter    = setAvailability
+  $field.label     = Availability
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="availability")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = availability
+  $field.databaseType = INT
+  $field.jdbcTypeCode = 4
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : price
+ ------------------------------
+ Java :
+  $field.name      = price
+  $field.type      = BigDecimal
+  $field.getter    = getPrice
+  $field.setter    = setPrice
+  $field.label     = Price
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="price")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = price
+  $field.databaseType = DECIMAL
+  $field.jdbcTypeCode = 3
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
+ ------------------------------
+ Field : specialOffer
+ ------------------------------
+ Java :
+  $field.name      = specialOffer
+  $field.type      = BigDecimal
+  $field.getter    = getSpecialOffer
+  $field.setter    = setSpecialOffer
+  $field.label     = Special Offer
+  $field.inputType = number
+ Java bean validation annotations :
+
+ Java bean validation annotations JSR303 only :
+
+ JPA annotations :
+  @Column(name="special_offer")
+
+ Database :
+  $field.isKeyElement() = false
+  $field.isAutoIncremented() = false
+  $field.isUsedInForeignKey() = false
+  $field.databaseName = special_offer
+  $field.databaseType = DECIMAL
+  $field.jdbcTypeCode = 3
+  $field.databaseSize = 10
+  $field.isDatabaseNotNull = false
+  $field.hasDatabaseDefaultValue() = false
+  $field.databaseDefaultValue = 
+
