@@ -9,17 +9,16 @@ class Review extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-	
+
 		$this->load->library(array('table','form_validation'));
 		$this->load->helper('url');
 		$this->load->model('Review_model','',TRUE);
 	}
-		
+
 	function index($offset = 0) {
 	
 		/* OFFSET */
 		$uri_segment = 3;
-		$offset = $this->uri->segment($uri_segment);
 		
 		/* LOAD DATA */
 		$reviews = $this->Review_model->get_paged_list($this->limit, $offset)->result();
@@ -36,26 +35,26 @@ class Review extends CI_Controller {
 		/* GENERATE TABLE DATA */
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('CUSTOMER CODE', 'BOOK ID', 'BODY', 'NOTE', 'CREATION DATE', 'LAST UPDATE', 'Actions');
-		$i = 0 + $offset;
-		foreach ($reviews as $review) {
-			$this->table->add_row(++$i,
-			$review->book_id,
+		$this->table->set_heading('CUSTOMER CODE', 'BOOK ID', 'BODY', 'NOTE', 'CREATION DATE', 'LAST UPDATE', 'Actions'); 
+		foreach ( $reviews as $review ) {
+			$this->table->add_row(
+$review->customer_code,
+$review->book_id,
 $review->body,
 $review->note,
 $review->creation_date,
 $review->last_update,
-				anchor('review/view/'.$review->customerCode,'view',array('class'=>'view')).' '.
-				anchor('review/update/'.$review->customerCode,'update',array('class'=>'update')).' '.
-				anchor('review/delete/'.$review->customerCode,'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this Review ?')"))
-			);
+anchor('review/view/'.$review->customer_code.$review->book_id,'view',array('class'=>'view')).' '.
+anchor('review/update/'.$review->customer_code,'update',array('class'=>'update')).' '.
+anchor('review/delete/'.$review->customer_code,'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this Review ?')"))
+);
 		}
 		$data['table'] = $this->table->generate();
 		
 		/* LOAD VIEW */
 		$this->load->view('reviewList', $data);
 	}
-	
+
 	function add() {
 	
 		/* SET EMPTY DEFAULT FROM FIELD VALUES */
@@ -73,7 +72,7 @@ $review->last_update,
 		/* LOAD VIEW */
 		$this->load->view('reviewEdit', $data);
 	}
-	
+
 	function addReview() {
 	
 		/* SET COMMON PROPERTIES */
@@ -95,44 +94,45 @@ $review->last_update,
 		
 			/* SAVE DATA */
 			$review = array(
-			'book_id' => $this->input->post('book_id'),
+'customer_code' => $this->input->post('customer_code'),
+'book_id' => $this->input->post('book_id'),
 'body' => $this->input->post('body'),
 'note' => $this->input->post('note'),
 'creation_date' => $this->input->post('creation_date'),
 'last_update' => $this->input->post('last_update'),
 			);
-			$customerCode = $this->Review_model->save($review);
+			$this->Review_model->save( $review );
 				
 			/* SET USER MESSAGE */
 			$data['message'] = '<div class="success">add new Review success</div>';
 		}
-	
+
 		/* LOAD VIEW */
 		$this->load->view('reviewEdit', $data);
 	}
 	
-	function view($customerCode) {
+	function view( $customerCode, $bookId  ) {
 	
 		/* SET COMMON PROPERTIES */
 		$data['title'] = 'Review Details';
 		$data['link_back'] = anchor('review/index/','Back to list of Reviews',array('class'=>'back'));
 	
 		/* GET Review DETAILS */
-		$data['review'] = $this->Review_model->get_by_customerCode($customerCode)->row();
+		$data['review'] = $this->Review_model->get_by_customer_code_and_book_id ( $customerCode, $bookId  )->row();
 	
 		/* LOAD VIEW */
 		$this->load->view('reviewView', $data);
 	}
-	
-	function update($customerCode) {
+
+	function update( $customerCode, $bookId  ) {
 	
 		/* SET VALIDATION PROPERTIES */
 		$this->_set_rules();
 	
 		/* PREFILL FORM VALUES */
-		$review = $this->Review_model->get_by_customer_code($customerCode)->row();
-		$this->form_data->customer_code = $customer_code;
-		$this->form_data->book_id = $review->book_id; 
+		$review = $this->Review_model->get_by_customer_code_and_book_id ( $customerCode, $bookId  )->row();
+		$this->form_data->customer_code = $review->customer_code; 
+$this->form_data->book_id = $review->book_id; 
 $this->form_data->body = $review->body; 
 $this->form_data->note = $review->note; 
 $this->form_data->creation_date = $review->creation_date; 
@@ -147,7 +147,7 @@ $this->form_data->last_update = $review->last_update;
 		/* LOAD VIEW */
 		$this->load->view('reviewEdit', $data);
 	}
-	
+
 	function updateReview() {
 	
 		/* SET COMMON PROPERTIES */
@@ -168,33 +168,33 @@ $this->form_data->last_update = $review->last_update;
 		else {
 		
 			/* SAVE DATA */
-			$customerCode = $this->input->post('customer_code');
+$customerCode = $this->input->post('customer_code');
+$bookId = $this->input->post('book_id');
 			$review = array(
-				'book_id' => $this->input->post('book_id'),
-'body' => $this->input->post('body'),
+				'body' => $this->input->post('body'),
 'note' => $this->input->post('note'),
 'creation_date' => $this->input->post('creation_date'),
 'last_update' => $this->input->post('last_update')
 			);
-			$this->Review_model->update($customerCode, $review);
+			$this->Review_model->update( $customerCode, $bookId , $review );
 				
 			/* SET USER MESSAGE */
 			$data['message'] = '<div class="success">update Review success</div>';
 		}
-	
+
 		/* LOAD VIEW */
 		$this->load->view('reviewEdit', $data);
 	}
-	
-	function delete($customerCode) {
+
+	function delete( $customerCode, $bookId  ) {
 	
 		/* DELETE Review */
-		$this->Review_model->delete($customerCode);
+		$this->Review_model->delete( $customerCode, $bookId  );
 	
 		/* REDIRECT TO Review LIST PAGE */
 		redirect('review/index/','refresh');
 	}
-	
+
 	/* SET EMPTY DEFAULT FROM FIELD VALUES */
 	function _set_fields() {
 		$this->form_data->customer_code = '';
@@ -204,11 +204,10 @@ $this->form_data->last_update = $review->last_update;
 		$this->form_data->creation_date = '';
 		$this->form_data->last_update = '';
 		}
-	
+
 	/* VALIDATION RULES */
 	function _set_rules() {
-		$this->form_validation->set_rules('book_id', 'BOOK ID', 'trim|required');
-$this->form_validation->set_rules('body', 'BODY', 'trim|required');
+		$this->form_validation->set_rules('body', 'BODY', 'trim|required');
 $this->form_validation->set_rules('note', 'NOTE', 'trim|required');
 $this->form_validation->set_rules('creation_date', 'CREATION DATE', 'trim|required');
 $this->form_validation->set_rules('last_update', 'LAST UPDATE', 'trim|required');
@@ -217,6 +216,6 @@ $this->form_validation->set_rules('last_update', 'LAST UPDATE', 'trim|required')
 		$this->form_validation->set_message('isset', '* required');
 		$this->form_validation->set_error_delimiters('<p class="error">', '</p>');
 	}
-	
+
 }
 ?>

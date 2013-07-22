@@ -9,12 +9,12 @@ class Author extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-	
+
 		$this->load->library(array('table','form_validation'));
 		$this->load->helper('url');
 		$this->load->model('Author_model','',TRUE);
 	}
-		
+
 	function index($offset = 0) {
 	
 		/* OFFSET */
@@ -36,11 +36,10 @@ class Author extends CI_Controller {
 		/* GENERATE TABLE DATA */
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('ID', 'LAST NAME', 'FIRST NAME', 'Actions');
-		$i = 0 + $offset;
-		foreach ($authors as $author) {
+		$this->table->set_heading('ID', 'LAST NAME', 'FIRST NAME', 'Actions'); 		$i = 0 + $offset;
+		foreach ( $authors as $author ) {
 			$this->table->add_row(++$i,
-			$author->last_name,
+$author->last_name,
 $author->first_name,
 				anchor('author/view/'.$author->id,'view',array('class'=>'view')).' '.
 				anchor('author/update/'.$author->id,'update',array('class'=>'update')).' '.
@@ -52,7 +51,7 @@ $author->first_name,
 		/* LOAD VIEW */
 		$this->load->view('authorList', $data);
 	}
-	
+
 	function add() {
 	
 		/* SET EMPTY DEFAULT FROM FIELD VALUES */
@@ -70,7 +69,7 @@ $author->first_name,
 		/* LOAD VIEW */
 		$this->load->view('authorEdit', $data);
 	}
-	
+
 	function addAuthor() {
 	
 		/* SET COMMON PROPERTIES */
@@ -92,41 +91,41 @@ $author->first_name,
 		
 			/* SAVE DATA */
 			$author = array(
-			'last_name' => $this->input->post('last_name'),
+'last_name' => $this->input->post('last_name'),
 'first_name' => $this->input->post('first_name'),
 			);
-			$id = $this->Author_model->save($author);
+			$this->Author_model->save( $author );
 				
 			/* SET USER MESSAGE */
 			$data['message'] = '<div class="success">add new Author success</div>';
 		}
-	
+
 		/* LOAD VIEW */
 		$this->load->view('authorEdit', $data);
 	}
 	
-	function view($id) {
+	function view( $id  ) {
 	
 		/* SET COMMON PROPERTIES */
 		$data['title'] = 'Author Details';
 		$data['link_back'] = anchor('author/index/','Back to list of Authors',array('class'=>'back'));
 	
 		/* GET Author DETAILS */
-		$data['author'] = $this->Author_model->get_by_id($id)->row();
+		$data['author'] = $this->Author_model->get_by_id ( $id  )->row();
 	
 		/* LOAD VIEW */
 		$this->load->view('authorView', $data);
 	}
-	
-	function update($id) {
+
+	function update( $id  ) {
 	
 		/* SET VALIDATION PROPERTIES */
 		$this->_set_rules();
 	
 		/* PREFILL FORM VALUES */
-		$author = $this->Author_model->get_by_id($id)->row();
-		$this->form_data->id = $id;
-		$this->form_data->last_name = $author->last_name; 
+		$author = $this->Author_model->get_by_id ( $id  )->row();
+		$this->form_data->id = $author->id; 
+$this->form_data->last_name = $author->last_name; 
 $this->form_data->first_name = $author->first_name; 
 		
 		/* SET COMMON PROPERTIES */
@@ -138,7 +137,7 @@ $this->form_data->first_name = $author->first_name;
 		/* LOAD VIEW */
 		$this->load->view('authorEdit', $data);
 	}
-	
+
 	function updateAuthor() {
 	
 		/* SET COMMON PROPERTIES */
@@ -159,37 +158,37 @@ $this->form_data->first_name = $author->first_name;
 		else {
 		
 			/* SAVE DATA */
-			$id = $this->input->post('id');
+$id = $this->input->post('id');
 			$author = array(
 				'last_name' => $this->input->post('last_name'),
 'first_name' => $this->input->post('first_name')
 			);
-			$this->Author_model->update($id, $author);
+			$this->Author_model->update( $id , $author );
 				
 			/* SET USER MESSAGE */
 			$data['message'] = '<div class="success">update Author success</div>';
 		}
-	
+
 		/* LOAD VIEW */
 		$this->load->view('authorEdit', $data);
 	}
-	
-	function delete($id) {
+
+	function delete( $id  ) {
 	
 		/* DELETE Author */
-		$this->Author_model->delete($id);
+		$this->Author_model->delete( $id  );
 	
 		/* REDIRECT TO Author LIST PAGE */
 		redirect('author/index/','refresh');
 	}
-	
+
 	/* SET EMPTY DEFAULT FROM FIELD VALUES */
 	function _set_fields() {
 		$this->form_data->id = '';
 		$this->form_data->last_name = '';
 		$this->form_data->first_name = '';
 		}
-	
+
 	/* VALIDATION RULES */
 	function _set_rules() {
 		$this->form_validation->set_rules('last_name', 'LAST NAME', 'trim|required');
@@ -199,6 +198,6 @@ $this->form_validation->set_rules('first_name', 'FIRST NAME', 'trim|required');
 		$this->form_validation->set_message('isset', '* required');
 		$this->form_validation->set_error_delimiters('<p class="error">', '</p>');
 	}
-	
+
 }
 ?>

@@ -1,0 +1,44 @@
+## ----------------------------------------------------------------------
+## Macros 
+## ----------------------------------------------------------------------
+#macro( argumentsWithType $fields )
+#set ( $count = 0 )
+#set ( $args = "" )
+#foreach( $field in $fields )
+#set ( $count = $count + 1 )
+#if ( $count > 1 )
+#set ( $args = "$args, " )
+#end
+#set ( $args = "${args}${field.name}" )
+#end
+$args 
+#end
+## ----------------------------------------------------------------------
+#macro( arguments $fields )
+#set ( $count = 0 )
+#set ( $args = "" )
+#foreach( $field in $fields )
+#set ( $count = $count + 1 )
+#if ( $count > 1 )
+#set ( $args = "${args}, " )
+#end
+#set ( $args = "${args} ${field.name}" )
+#end
+$args #end
+## ----------------------------------------------------------------------
+#macro( argumentsWithGetters $objName $fields )
+#set ( $count = 0 )
+#set ( $args = "" )
+#foreach( $field in $fields )
+#set ( $count = $count + 1 )
+#if ( $count > 1 )
+#set ( $args = "${args}, " )
+#end
+#set ( $args = "${args} ${objName}.${field.getter}()" )
+#end
+$args #end
+## ----------------------------------------------------------------------
+
+	private final static String getKey( #argumentsWithType($beanClass.keyAttributes) ) {
+
+	}

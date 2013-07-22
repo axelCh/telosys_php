@@ -30,7 +30,7 @@
 			</tr>
 #end		
 #end
-#foreach ($field in $beanClass.nonKeyAttributes)
+#foreach ($field in $beanClass.NonKeyAttributes)
 			<tr>
 				<td valign="top">$field.databaseName.replace('_',' ').toUpperCase()<span style="color:red;">*</span></td>
 				<td><input type="text" name="$field.databaseName" class="text" value="<?php echo set_value('$field.databaseName', ${DOLLAR}this->form_data->$field.databaseName); ?>"/>

@@ -19,7 +19,7 @@
 				<td><?php echo ${DOLLAR}${beanClass.sqlTable}->$field.databaseName; ?></td>
 			</tr>
 #end
-#foreach ($field in $beanClass.nonKeyAttributes)
+#foreach ($field in $beanClass.NonKeyAttributes)
 			<tr>
 				<td valign="top">$field.databaseName.replace('_',' ').toUpperCase()</td>
 				<td><?php echo ${DOLLAR}${beanClass.sqlTable}->$field.databaseName; ?></td>
