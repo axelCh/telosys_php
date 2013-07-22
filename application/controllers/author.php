@@ -19,7 +19,6 @@ class Author extends CI_Controller {
 	
 		/* OFFSET */
 		$uri_segment = 3;
-		$offset = $this->uri->segment($uri_segment);
 		
 		/* LOAD DATA */
 		$authors = $this->Author_model->get_paged_list($this->limit, $offset)->result();
@@ -36,15 +35,16 @@ class Author extends CI_Controller {
 		/* GENERATE TABLE DATA */
 		$this->load->library('table');
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('ID', 'LAST NAME', 'FIRST NAME', 'Actions'); 		$i = 0 + $offset;
+		$this->table->set_heading('ID', 'LAST NAME', 'FIRST NAME', 'Actions'); 
 		foreach ( $authors as $author ) {
-			$this->table->add_row(++$i,
+			$this->table->add_row(
+$author->id,
 $author->last_name,
 $author->first_name,
-				anchor('author/view/'.$author->id,'view',array('class'=>'view')).' '.
-				anchor('author/update/'.$author->id,'update',array('class'=>'update')).' '.
-				anchor('author/delete/'.$author->id,'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this Author ?')"))
-			);
+anchor('author/view/'.$author->id,'view',array('class'=>'view')).' '.
+anchor('author/update/'.$author->id,'update',array('class'=>'update')).' '.
+anchor('author/delete/'.$author->id,'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this Author ?')"))
+);
 		}
 		$data['table'] = $this->table->generate();
 		

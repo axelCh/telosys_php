@@ -1,0 +1,108 @@
+## ----------------------------------------------------------------------
+## Macros 
+## ----------------------------------------------------------------------
+#macro( argumentsWithType $fields )
+#set ( $count = 0 )
+#set ( $args = "" )
+#foreach( $field in $fields )
+#set ( $count = $count + 1 )
+#if ( $count > 1 )
+#set ( $args = "$args, " )
+#end
+#set ( $args = "${args}${field.type} ${field.name}" )
+#end
+$args #end
+## ----------------------------------------------------------------------
+#if ( $beanClass.hasCompositePrimaryKey() )
+#set( $primaryKeyType = "${beanClass.name}Key" )
+// This Bean has a composite Primary Key : $primaryKeyType
+#else 
+#set( $primaryKeyType = $beanClass.keyAttributes[0].type )
+// This Bean has a basic Primary Key : $primaryKeyType
+#end
+## ----------------------------------------------------------------------
+package ${target.javaPackageFromFolder($SRC)};
+
+import java.util.List;
+import java.util.Map;
+
+import $beanClass.fullName ;
+
+/**
+ * Basic persistence operations for entity "${beanClass.name}"
+ * 
+ * @author Telosys Tools Generator
+ *
+ */
+public interface ${beanClass.name}Persistence {
+
+	/**
+	 * Deletes the given entity <br>
+	 * Transactional operation ( begin transaction and commit )
+	 * @param ${beanClass.name.toLowerCase()}
+	 * @return true if found and deleted, false if not found
+	 */
+	public boolean delete(${beanClass.name} ${beanClass.name.toLowerCase()}) ;
+
+	/**
+	 * Deletes the entity by its Primary Key <br>
+	 * Transactional operation ( begin transaction and commit )
+#foreach( $arg in $beanClass.keyAttributes  )
+	 * @param $arg.name
+#end	 
+	 * @return true if found and deleted, false if not found
+	 */
+	public boolean delete(#argumentsWithType( $beanClass.keyAttributes )) ;
+
+	/**
+	 * Inserts the given entity and commit <br>
+	 * Transactional operation ( begin transaction and commit )
+	 * @param ${beanClass.name.toLowerCase()}
+	 */
+	public void insert(${beanClass.name} ${beanClass.name.toLowerCase()}) ;
+
+	/**
+	 * Loads the entity for the given Primary Key <br>
+#foreach( $arg in $beanClass.keyAttributes  )
+	 * @param $arg.name
+#end	 
+	 * @return the entity loaded (or null if not found)
+	 */
+	public ${beanClass.name} load(#argumentsWithType( $beanClass.keyAttributes )) ;
+
+	/**
+	 * Loads ALL the entities (use with caution)
+	 * @return
+	 */
+	public List<${beanClass.name}> loadAll() ;
+
+	/**
+	 * Loads a list of entities using the given "named query" without parameter 
+	 * @param queryName
+	 * @return
+	 */
+	public List<${beanClass.name}> loadByNamedQuery(String queryName) ;
+
+	/**
+	 * Loads a list of entities using the given "named query" with parameters 
+	 * @param queryName
+	 * @param queryParameters
+	 * @return
+	 */
+	public List<${beanClass.name}> loadByNamedQuery(String queryName, Map<String, Object> queryParameters) ;
+
+	/**
+	 * Saves (create or update) the given entity <br>
+	 * Transactional operation ( begin transaction and commit )
+	 * @param ${beanClass.name.toLowerCase()}
+	 * @return
+	 */
+	public ${beanClass.name} save(${beanClass.name} ${beanClass.name.toLowerCase()}) ;
+
+	/**
+	 * Search the entities matching the given search criteria
+	 * @param criteria
+	 * @return
+	 */
+	public List<${beanClass.name}> search( Map<String, Object> criteria ) ;
+}

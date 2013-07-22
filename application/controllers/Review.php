@@ -44,7 +44,7 @@ $review->body,
 $review->note,
 $review->creation_date,
 $review->last_update,
-anchor('review/view/'.$review->customer_code.$review->book_id,'view',array('class'=>'view')).' '.
+anchor('review/view/'.$review->customer_code,'view',array('class'=>'view')).' '.
 anchor('review/update/'.$review->customer_code,'update',array('class'=>'update')).' '.
 anchor('review/delete/'.$review->customer_code,'delete',array('class'=>'delete','onclick'=>"return confirm('Are you sure want to delete this Review ?')"))
 );
